@@ -49,7 +49,8 @@ public class ThirtyActivity extends AppCompatActivity {
         //TODO add additional state control onPause
     }
 
-    @NonNull
+
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
