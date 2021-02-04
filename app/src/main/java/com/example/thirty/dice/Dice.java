@@ -39,6 +39,13 @@ public class Dice {
         }
     }
 
+    /**
+     * Get a die controller from the list of dice.
+     *
+     * @param index the first die controller is 1 and the last die controller is at max number
+     *              of die controllers.
+     * @return a die controller on success otherwise null.
+     */
     public DieController getDie(int index) {
         int i = index - 1;
         if ((i >= 0) && (i < numberOfDice())) {
@@ -47,6 +54,11 @@ public class Dice {
         return null;
     }
 
+    /**
+     * The number of die controllers in the group of dice.
+     *
+     * @return the number of dice as an int.
+     */
     public int numberOfDice() {
         return dice.size();
     }

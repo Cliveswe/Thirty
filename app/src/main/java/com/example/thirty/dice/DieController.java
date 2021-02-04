@@ -41,19 +41,22 @@ public class DieController extends Die {
 
     /**
      * Set the id of the die controller.
+     *
      * @param id as an int.
      */
-    public void setDieId(int id){
+    public void setDieId(int id) {
         this.dieId = id;
     }
 
     /**
      * Get the id of the die controller.
+     *
      * @return the id of the controller die as an int.
      */
-    public int getDieId(){
+    public int getDieId() {
         return dieId;
     }
+
     @Override
     public String toString() {
         return "DieController{" +
