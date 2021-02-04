@@ -111,11 +111,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:autoText="false"
         android:gravity="start"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="@string/game_information_textView"
         android:textAlignment="viewStart"
+        android:textColor="@color/black"
         android:textIsSelectable="false"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -131,6 +133,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="16dp"
         android:text="@string/calculate_dice"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -142,6 +145,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:text="@string/roll_dice"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
