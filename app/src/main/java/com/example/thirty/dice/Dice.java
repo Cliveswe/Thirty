@@ -13,7 +13,12 @@ import java.util.List;
  * dice.
  */
 public class Dice {
+    //the maximum number of throw of the dice per round in the game
+    private final static int MAX_ROLLS = 3;
+    private int rollCount;
 
+
+    //a collection of die as a list
     private List<DieController> dice;
 
     /**
@@ -29,13 +34,14 @@ public class Dice {
      * @param numberOfDie
      */
     public Dice(int numberOfDie) {
+        rollCount = 1;
         dice = new ArrayList<DieController>();
         DieController dc;
+
         for (int index = 0; index < numberOfDie; index++) {
             dc = new DieController();
             dc.setDieId(index);
             dice.add(index, dc);
-
         }
     }
 
@@ -57,20 +63,50 @@ public class Dice {
     /**
      * Roll all the dice.
      */
-    public void rollDice() {
-        for (DieController element : dice) {
-            element.roll();
+    public boolean rollDice() {
+        if (rollCount <= MAX_ROLLS) {
+            for (DieController element : dice) {
+                element.roll();
+            }
+            increaseRollCount();
+            return true;
         }
+        return false;
     }
 
-    public void selectDie(int dieId){
-        int i = dieId - 1;
+    private void increaseRollCount() {
+        rollCount++;
+    }
+
+    public void resetRollDice() {
+        rollCount = 1;
         for (DieController element: dice) {
-            if(i == element.getDieId()){
+            if(element.isSelected()){
                 element.select();
             }
         }
     }
+
+    public boolean canRollDice(){
+        if(rollCount <= MAX_ROLLS){
+            return true;
+        }
+        return false;
+    }
+
+    public int getRollCount() {
+        return rollCount;
+    }
+
+    public void selectDie(int dieId) {
+        int i = dieId - 1;
+        for (DieController element : dice) {
+            if (i == element.getDieId()) {
+                element.select();
+            }
+        }
+    }
+
     /**
      * The number of die controllers in the group of dice.
      *
