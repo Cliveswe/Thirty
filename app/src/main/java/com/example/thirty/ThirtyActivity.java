@@ -5,16 +5,18 @@
  */
 package com.example.thirty;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.thirty.dice.Dice;
-import com.example.thirty.dice.Die;
 import com.example.thirty.dice.DieController;
+import com.example.thirty.util.SetImageButtonsDice;
+
+import java.util.HashMap;
 
 public class ThirtyActivity extends AppCompatActivity {
     //Logcat tags
@@ -25,6 +27,8 @@ public class ThirtyActivity extends AppCompatActivity {
 
     private DieController test_die;
     private AllDieImages mAllDieImages;
+    private HashMap<Integer, Integer> mAllDiceImageButtons;
+    private Dice mGameDice;
 
     private int test;
 
@@ -41,26 +45,94 @@ public class ThirtyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_thirty);
 
         //TODO add more data
-        mAllDieImages = new AllDieImages();
+initialise();
         /**
          * START HERE TO SET UP THE DICE WITH PRIMARY AND SECONDARY COLOURS!!!!
          */
         test_die = new DieController();
 
-
         Log.i(TAG, "testing dice " + test_die.toString());
 
-        ImageButton testButton = (ImageButton) findViewById(R.id.die_Button_1);
-        testButton.setImageResource(R.drawable.red4);
+        //ImageButton testButton = (ImageButton) findViewById(R.id.die_Button_1);
+        //testButton.setImageResource(R.drawable.red4);
 
-int t = mAllDieImages.getDieImage(DieColourEnum.RED, 2);
-System.out.println("get value " + t);
-Dice x = new Dice();
-        System.out.println("number of dice = " + x.numberOfDice());
-        System.out.println("id = " + x.getDie(5).getDieId() + "  dice = " + x.getDie(5));
+        //int t = mAllDieImages.getDieImage(DieColourEnum.RED, 2);
+        //System.out.println("get value " + t);
+        //Dice x = new Dice();
+        //System.out.println("number of dice = " + x.numberOfDice());
+        //x.getDie(5).roll();
+        //System.out.println("id = " + x.getDie(5).getDieId() + "  dice = " + x.getDie(5));
         //testButton.setImageResource(mAllDieImages.getDieImage(DieColourEnum.GREY, 4));
         //testButton.setImageResource(t);
-        testButton.setImageResource(mAllDieImages.getDieImage(DieColourEnum.RED, 3));
+        //testButton.setImageResource(mAllDieImages.getDieImage(DieColourEnum.GREY, 3));
+
+        /*for (Integer element : mAllDiceImageButtons.keySet()) {
+            ImageButton ib = (ImageButton) findViewById(mAllDiceImageButtons.get(element.intValue()));
+            ib.setImageResource(mAllDieImages.getDieImage(DieColourEnum.RED, x.getDie(element.intValue()).getDieValue()));
+        }*/
+
+
+        /*mGameDice.selectDie(4);
+        SetImageButtonsDice.setDiceImageButtonsImage(this,
+                PRIMARY_COLOUR, SECONDARY_COLOUR,
+                mAllDiceImageButtons, mGameDice);
+*/
+
+        /*SetImageButtonsDice.setDiceImageButtonsImage(this,
+                SECONDARY_COLOUR, PRIMARY_COLOUR,
+                mAllDiceImageButtons, mGameDice);*/
+    }
+
+    /**
+     * Initialise app.
+     */
+    private void initialise(){
+        mGameDice = new Dice();
+        mAllDieImages = new AllDieImages();
+
+        mAllDiceImageButtons = new HashMap<Integer, Integer>();
+        SetImageButtonsDice.dieImageButtonsId(mAllDiceImageButtons);
+
+        selectDieButtonAction();
+        rollDiceButtonAction();
+        refreshUI();
+    }
+
+    private void refreshUI(){
+        SetImageButtonsDice.setDiceImageButtonsImage(this,
+                PRIMARY_COLOUR,
+                SECONDARY_COLOUR,
+                mAllDiceImageButtons,
+                mGameDice);
+    }
+
+    /**
+     * Add a onClick event listener to each of the die in the games set of dice. This is where we
+     * wire up a UI image button to a die. Thus when the image button is clicked the status of the
+     * die is switched from is selected to unselected.
+     */
+    private void selectDieButtonAction(){
+        ImageButton ib;
+        for (Integer element: mAllDiceImageButtons.keySet()) {
+            ib = (ImageButton) findViewById(mAllDiceImageButtons.get(element));
+            ib.setOnClickListener(v -> {
+                mGameDice.selectDie(element);
+                refreshUI();
+            });
+        }
+    }
+
+    /**
+     * Add a onClick event listener to the games set of dice. This is where we wire up a UI button
+     * to the object that contains all the die. Thus when the roll dice button is clicked the
+     * value of each die is updated.
+     */
+    private void rollDiceButtonAction(){
+        Button ib = (Button) findViewById(R.id.roll_dice);
+        ib.setOnClickListener(v->{
+            mGameDice.rollDice();
+            refreshUI();
+        });
     }
 
     /**

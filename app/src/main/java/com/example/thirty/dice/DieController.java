@@ -49,6 +49,15 @@ public class DieController extends Die {
     }
 
     /**
+     * Roll a die if the die has the stats of not been selected.
+     */
+    public void roll() {
+        if (!isSelected) {
+            rollDie();
+        }
+    }
+
+    /**
      * Get the id of the die controller.
      *
      * @return the id of the controller die as an int.

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Dice {
 
-    private List dice;
+    private List<DieController> dice;
 
     /**
      * Create a default number of die.
@@ -54,6 +54,23 @@ public class Dice {
         return null;
     }
 
+    /**
+     * Roll all the dice.
+     */
+    public void rollDice() {
+        for (DieController element : dice) {
+            element.roll();
+        }
+    }
+
+    public void selectDie(int dieId){
+        int i = dieId - 1;
+        for (DieController element: dice) {
+            if(i == element.getDieId()){
+                element.select();
+            }
+        }
+    }
     /**
      * The number of die controllers in the group of dice.
      *
