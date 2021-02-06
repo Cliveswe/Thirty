@@ -10,7 +10,7 @@ package com.example.thirty.dice;
  * its value.
  */
 public class Die {
-    private int dieValue;
+    private int mDieValue;
     public final static int die_max = 6;
     public final static int die_min = 1;
 
@@ -22,12 +22,20 @@ public class Die {
     }
 
     /**
+     * Copy constructor
+     * @param src source to copy from as Die.
+     */
+    public Die(Die src){
+        this.mDieValue = src.mDieValue;
+    }
+
+    /**
      * Return the current value of the die.
      *
      * @return the value of the die as an int.
      */
     public int getDieValue() {
-        return dieValue;
+        return mDieValue;
     }
 
     /**
@@ -36,7 +44,7 @@ public class Die {
      * @param dieValue the value of the die as an int.
      */
     private void setDieValue(int dieValue) {
-        this.dieValue = dieValue;
+        this.mDieValue = dieValue;
     }
 
     /**

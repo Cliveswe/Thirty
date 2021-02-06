@@ -13,8 +13,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.thirty.GameMessages.GameMessageKeyEnum;
-import com.example.thirty.GameMessages.GameMessages;
+import com.example.thirty.game.ThirtyGame;
+import com.example.thirty.gameMessages.GameMessageKeyEnum;
+import com.example.thirty.gameMessages.GameMessages;
 import com.example.thirty.dice.Dice;
 import com.example.thirty.dice.DieController;
 import com.example.thirty.util.SetImageButtonsDice;
@@ -28,10 +29,10 @@ public class ThirtyActivity extends AppCompatActivity {
     private static final DieColourEnum PRIMARY_COLOUR = DieColourEnum.WHITE;
     private static final DieColourEnum SECONDARY_COLOUR = DieColourEnum.GREY;
 
-    private DieController test_die;
+    //private DieController test_die;
     private AllDieImages mAllDieImages;
     private HashMap<Integer, Integer> mAllDiceImageButtons;
-    private Dice mGameDice;
+    private ThirtyGame mGame;
     private GameMessages mGameMessages;
 
     private int test;
@@ -53,9 +54,9 @@ public class ThirtyActivity extends AppCompatActivity {
         /**
          * START HERE TO SET UP THE DICE WITH PRIMARY AND SECONDARY COLOURS!!!!
          */
-        test_die = new DieController();
+        //test_die = new DieController();
 
-        Log.i(TAG, "testing dice " + test_die.toString());
+        //Log.i(TAG, "testing dice " + test_die.toString());
 
         //ImageButton testButton = (ImageButton) findViewById(R.id.die_Button_1);
         //testButton.setImageResource(R.drawable.red4);
@@ -91,7 +92,7 @@ public class ThirtyActivity extends AppCompatActivity {
      * Initialise app.
      */
     private void initialise() {
-        mGameDice = new Dice();
+        mGame = new ThirtyGame();
         mAllDieImages = new AllDieImages();
         mGameMessages = new GameMessages();
 
@@ -109,7 +110,7 @@ public class ThirtyActivity extends AppCompatActivity {
                 PRIMARY_COLOUR,
                 SECONDARY_COLOUR,
                 mAllDiceImageButtons,
-                mGameDice);
+                mGame.getDiceCopy());
     }
 
     /**
@@ -122,8 +123,8 @@ public class ThirtyActivity extends AppCompatActivity {
         for (Integer element : mAllDiceImageButtons.keySet()) {
             ib = (ImageButton) findViewById(mAllDiceImageButtons.get(element));
             ib.setOnClickListener(v -> {
-                if(mGameDice.getRollCount() != 1) {
-                    mGameDice.selectDie(element);
+                if(mGame.getRollCount() != 1) {
+                    mGame.selectDie(element);
                     refreshUI();
                 }
             });
@@ -138,10 +139,10 @@ public class ThirtyActivity extends AppCompatActivity {
     private void rollDiceButtonAction() {
         Button bt = (Button) findViewById(R.id.roll_dice);
         bt.setOnClickListener(v -> {
-            if (mGameDice.canRollDice()) {
-                mGameDice.rollDice();
+            if (mGame.canRollDice()) {
+                mGame.rollDice();
                 refreshUI();
-                if (!mGameDice.canRollDice()) {
+                if (!mGame.canRollDice()) {
                     Toast.makeText(this, "That was the last roll.", Toast.LENGTH_SHORT).show();
                     mGameMessages.displayMessage(this, GameMessageKeyEnum.MAX_ROLLS_REACHED);
                 }else {
@@ -154,7 +155,7 @@ public class ThirtyActivity extends AppCompatActivity {
     private void calculateDiceResult() {
         Button bt = (Button) findViewById(R.id.calculate_dice);
         bt.setOnClickListener(v -> {
-            mGameDice.resetRollDice();
+            mGame.resetRollDice();
             refreshUI();
             mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
         });

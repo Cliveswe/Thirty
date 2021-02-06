@@ -13,13 +13,11 @@ import java.util.List;
  * dice.
  */
 public class Dice {
-    //the maximum number of throw of the dice per round in the game
-    private final static int MAX_ROLLS = 3;
-    private int rollCount;
-
+    private int mRollCount;
+    private int mNumberOfDie;
 
     //a collection of die as a list
-    private List<DieController> dice;
+    private List<DieController> mDice;
 
     /**
      * Create a default number of die.
@@ -34,14 +32,30 @@ public class Dice {
      * @param numberOfDie
      */
     public Dice(int numberOfDie) {
-        rollCount = 1;
-        dice = new ArrayList<DieController>();
+        this.mNumberOfDie = numberOfDie;
+        mRollCount = 1;
+        mDice = new ArrayList<DieController>();
         DieController dc;
 
         for (int index = 0; index < numberOfDie; index++) {
             dc = new DieController();
             dc.setDieId(index);
-            dice.add(index, dc);
+            mDice.add(index, dc);
+        }
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param src source to copy from as data type Dice.
+     */
+    public Dice(Dice src) {
+        this.mNumberOfDie = src.mNumberOfDie;
+        this.mRollCount = src.mRollCount;
+        this.mDice = new ArrayList<DieController>();
+        //copy the array
+        for (DieController element : src.mDice) {
+            mDice.add(element);
         }
     }
 
@@ -55,7 +69,7 @@ public class Dice {
     public DieController getDie(int index) {
         int i = index - 1;
         if ((i >= 0) && (i < numberOfDice())) {
-            return (DieController) dice.get(i);
+            return (DieController) mDice.get(i);
         }
         return null;
     }
@@ -63,44 +77,64 @@ public class Dice {
     /**
      * Roll all the dice.
      */
-    public boolean rollDice() {
-        if (rollCount <= MAX_ROLLS) {
-            for (DieController element : dice) {
-                element.roll();
-            }
-            increaseRollCount();
-            return true;
+    public void rollDice() {
+        //if (rollCount <= MAX_ROLLS) {
+        for (DieController element : mDice) {
+            element.roll();
         }
-        return false;
+        increaseRollCount();
+        //  return true;
+        //}
+        //return false;
     }
 
+    /**
+     * Increase the roll counter by 1 roll.
+     */
     private void increaseRollCount() {
-        rollCount++;
+        mRollCount++;
     }
 
+    /**
+     * Reset the dice class values to its start up state.
+     */
     public void resetRollDice() {
-        rollCount = 1;
-        for (DieController element: dice) {
-            if(element.isSelected()){
+        mRollCount = 1;
+        for (DieController element : mDice) {
+            if (element.isSelected()) {
                 element.select();
             }
         }
     }
 
-    public boolean canRollDice(){
+    /**
+     * The dice cannot be thrown if the maximum number of throws has been met.
+     * @return true if the maximum number of throws has been reached otherwise false.
+     */
+    /*public boolean canRollDice(){
         if(rollCount <= MAX_ROLLS){
             return true;
         }
         return false;
-    }
+    }*/
 
+    /**
+     * The number of current throws.
+     *
+     * @return number of throws as int.
+     */
     public int getRollCount() {
-        return rollCount;
+        return mRollCount;
     }
 
+    /**
+     * A die has been selected.
+     *
+     * @param dieId the id of the die to select as int.
+     */
     public void selectDie(int dieId) {
         int i = dieId - 1;
-        for (DieController element : dice) {
+        for (DieController element : mDice) {
             if (i == element.getDieId()) {
                 element.select();
             }
@@ -113,7 +147,7 @@ public class Dice {
      * @return the number of dice as an int.
      */
     public int numberOfDice() {
-        return dice.size();
+        return mDice.size();
     }
 
     public String toString() {
