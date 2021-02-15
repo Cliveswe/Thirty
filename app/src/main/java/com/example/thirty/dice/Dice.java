@@ -6,15 +6,17 @@
 package com.example.thirty.dice;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * This is the main die controller as it will manage more than one die. The plural of die is
  * dice.
  */
-public class Dice {
+public class Dice implements Iterator<DieController> {
     private int mRollCount;
     private int mNumberOfDie;
+    private int mIndex;//index to the list of all die in the dice list
 
     //a collection of die as a list
     private List<DieController> mDice;
@@ -34,6 +36,7 @@ public class Dice {
     public Dice(int numberOfDie) {
         this.mNumberOfDie = numberOfDie;
         mRollCount = 1;
+        mIndex = 0;
         mDice = new ArrayList<DieController>();
         DieController dc;
 
@@ -52,7 +55,9 @@ public class Dice {
     public Dice(Dice src) {
         this.mNumberOfDie = src.mNumberOfDie;
         this.mRollCount = src.mRollCount;
+        this.mIndex = src.mIndex;
         this.mDice = new ArrayList<DieController>();
+
         //copy the array
         for (DieController element : src.mDice) {
             mDice.add(element);
@@ -100,6 +105,7 @@ public class Dice {
      */
     public void resetRollDice() {
         mRollCount = 1;
+        mIndex = 0;
         for (DieController element : mDice) {
             if (element.isSelected()) {
                 element.select();
@@ -150,8 +156,49 @@ public class Dice {
         return mDice.size();
     }
 
+    /**
+     * Get the number of how many die that have been selected.
+     *
+     * @return the number of selected die as an int.
+     */
+    public int getNumberOfSelectedDie() {
+        int res = 0;
+
+        for (DieController element : mDice) {
+            if (element.isSelected()) {
+                res++;
+            }
+        }
+        return res;
+    }
+
     public String toString() {
-        //TODO
+        //TODO Dice toString method
         return "";
+    }
+
+    /**
+     * Is there another selected die.
+     * @return true if there is another selected die otherwise false.
+     */
+    @Override
+    public boolean hasNext() {
+        for(int step = mIndex; step < mDice.size(); step++){
+            if(mDice.get(step).isSelected()){
+                mIndex = step;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the next selected die.
+     * @return the next selected die as a DietController.
+     */
+    @Override
+    public DieController next() {
+        return mDice.get(mIndex++);
+
     }
 }

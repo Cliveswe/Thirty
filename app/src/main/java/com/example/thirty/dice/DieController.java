@@ -1,11 +1,10 @@
+package com.example.thirty.dice;
+
 /**
  * Author: Clive Leddy
  * Email: clive@cliveleddy.com
  * Date: 2021-02-03
- */
-package com.example.thirty.dice;
-
-/**
+ *
  * This class extends the class Die. Here additional die properties and logic can be added.
  */
 public class DieController extends Die {
@@ -74,6 +73,11 @@ public class DieController extends Die {
         return mDieId;
     }
 
+    /**
+     *
+     * @return the class variables as a String.
+     */
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString() {
         return "DieController{" +

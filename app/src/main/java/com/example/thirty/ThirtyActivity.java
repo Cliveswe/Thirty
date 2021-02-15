@@ -123,7 +123,7 @@ public class ThirtyActivity extends AppCompatActivity {
         for (Integer element : mAllDiceImageButtons.keySet()) {
             ib = (ImageButton) findViewById(mAllDiceImageButtons.get(element));
             ib.setOnClickListener(v -> {
-                if(mGame.getRollCount() != 1) {
+                if (mGame.getRollCount() != 1) {
                     mGame.selectDie(element);
                     refreshUI();
                 }
@@ -145,7 +145,7 @@ public class ThirtyActivity extends AppCompatActivity {
                 if (!mGame.canRollDice()) {
                     Toast.makeText(this, "That was the last roll.", Toast.LENGTH_SHORT).show();
                     mGameMessages.displayMessage(this, GameMessageKeyEnum.MAX_ROLLS_REACHED);
-                }else {
+                } else {
                     mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
                 }
             }
@@ -155,9 +155,18 @@ public class ThirtyActivity extends AppCompatActivity {
     private void calculateDiceResult() {
         Button bt = (Button) findViewById(R.id.calculate_dice);
         bt.setOnClickListener(v -> {
-            mGame.resetRollDice();
-            refreshUI();
-            mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
+            if (!mGame.isGameOver()) {
+                //mGame.resetRollDice();
+                mGame.tesLowScore();
+                mGame.startNewRound();
+                refreshUI();
+                mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
+                //TODO Calculate round score
+            } else {
+                mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
+                //TODO Game over show results
+            }
+
         });
     }
 

@@ -5,5 +5,6 @@
  */
 package com.example.thirty.gameMessages;
 
-public enum GameMessageKeyEnum {MAX_ROLLS_REACHED, ROLL_DICE};
+public enum GameMessageKeyEnum {MAX_ROLLS_REACHED, ROLL_DICE, TESTING
+};
 

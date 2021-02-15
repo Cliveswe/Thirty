@@ -21,6 +21,7 @@ public class GameMessages {
         mMessageList = new HashMap<GameMessageKeyEnum, String>() {{
             put(GameMessageKeyEnum.MAX_ROLLS_REACHED, "You have reached the maximum number of rolls for this round. Calculate your score!");
             put(GameMessageKeyEnum.ROLL_DICE, "Roll the dice!");
+            put(GameMessageKeyEnum.TESTING, "Testing");
         }};
     }
 
