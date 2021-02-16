@@ -1,9 +1,7 @@
-/**
- * Author: Clive Leddy
- * Email: clive@cliveleddy.com
- * Date: 2021-02-03
- */
 package com.example.thirty.dice;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,8 +10,11 @@ import java.util.List;
 /**
  * This is the main die controller as it will manage more than one die. The plural of die is
  * dice.
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-03
  */
-public class Dice implements Iterator<DieController> {
+public class Dice implements Iterator<DieController>, Parcelable {
     private int mRollCount;
     private int mNumberOfDie;
     private int mIndex;//index to the list of all die in the dice list
@@ -172,9 +173,14 @@ public class Dice implements Iterator<DieController> {
         return res;
     }
 
+    @Override
     public String toString() {
-        //TODO Dice toString method
-        return "";
+        return "Dice{" +
+                "mRollCount=" + mRollCount +
+                ", mNumberOfDie=" + mNumberOfDie +
+                ", mIndex=" + mIndex +
+                ", mDice=" + mDice +
+                '}';
     }
 
     /**
@@ -200,5 +206,40 @@ public class Dice implements Iterator<DieController> {
     public DieController next() {
         return mDice.get(mIndex++);
 
+    }
+
+    /*
+    * Parcelable
+    **/
+    protected Dice(Parcel in) {
+        mRollCount = in.readInt();
+        mNumberOfDie = in.readInt();
+        mIndex = in.readInt();
+        mDice = in.createTypedArrayList(DieController.CREATOR);
+    }
+
+    public static final Creator<Dice> CREATOR = new Creator<Dice>() {
+        @Override
+        public Dice createFromParcel(Parcel in) {
+            return new Dice(in);
+        }
+
+        @Override
+        public Dice[] newArray(int size) {
+            return new Dice[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mRollCount);
+        dest.writeInt(mNumberOfDie);
+        dest.writeInt(mIndex);
+        dest.writeTypedList(mDice);
     }
 }

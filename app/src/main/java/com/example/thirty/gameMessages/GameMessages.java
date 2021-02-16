@@ -1,8 +1,3 @@
-/**
- * Author: Clive Leddy
- * Email: clive@cliveleddy.com
- * Date: 2021-02-05
- */
 package com.example.thirty.gameMessages;
 
 import android.app.Activity;
@@ -11,11 +6,13 @@ import com.example.thirty.R;
 import java.util.HashMap;
 
 /**
- *
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-05
  */
 public class GameMessages {
 
-    private HashMap<GameMessageKeyEnum, String> mMessageList;
+    private static HashMap<GameMessageKeyEnum, String> mMessageList;
 
     public GameMessages() {
         mMessageList = new HashMap<GameMessageKeyEnum, String>() {{

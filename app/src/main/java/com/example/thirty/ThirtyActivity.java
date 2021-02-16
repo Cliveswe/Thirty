@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.example.thirty.game.ThirtyGame;
 import com.example.thirty.gameMessages.GameMessageKeyEnum;
 import com.example.thirty.gameMessages.GameMessages;
-import com.example.thirty.dice.Dice;
-import com.example.thirty.dice.DieController;
 import com.example.thirty.util.SetImageButtonsDice;
 
 import java.util.HashMap;
@@ -54,6 +52,7 @@ public class ThirtyActivity extends AppCompatActivity {
         /**
          * START HERE TO SET UP THE DICE WITH PRIMARY AND SECONDARY COLOURS!!!!
          */
+
         //test_die = new DieController();
 
         //Log.i(TAG, "testing dice " + test_die.toString());
@@ -111,6 +110,14 @@ public class ThirtyActivity extends AppCompatActivity {
                 SECONDARY_COLOUR,
                 mAllDiceImageButtons,
                 mGame.getDiceCopy());
+
+        if (!mGame.isGameOver()){
+            mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
+        }else{
+            mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
+            Log.i(TAG, "Game is over");
+            //TODO START A NEW ACTIVITY TO SHOW THE FINAL SCORE BOARD
+        }
     }
 
     /**
@@ -156,14 +163,11 @@ public class ThirtyActivity extends AppCompatActivity {
         Button bt = (Button) findViewById(R.id.calculate_dice);
         bt.setOnClickListener(v -> {
             if (!mGame.isGameOver()) {
-                //mGame.resetRollDice();
-                mGame.tesLowScore();
-                mGame.startNewRound();
+                 mGame.updateScoreBoard();
                 refreshUI();
-                mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
-                //TODO Calculate round score
+                //mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
             } else {
-                mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
+                //mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
                 //TODO Game over show results
             }
 
