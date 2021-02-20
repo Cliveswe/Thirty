@@ -1,12 +1,8 @@
-/**
- * Author: Clive Leddy
- * Email: clive@cliveleddy.com
- * Date: 2021-01-30
- */
 package com.example.thirty;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -14,21 +10,26 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.thirty.game.ThirtyGame;
-import com.example.thirty.gameMessages.GameMessageKeyEnum;
 import com.example.thirty.gameMessages.GameMessages;
 import com.example.thirty.util.SetImageButtonsDice;
 
 import java.util.HashMap;
 
+/**
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-01-30
+ */
 public class ThirtyActivity extends AppCompatActivity {
     //Logcat tags
     private static final String TAG = "ThirtyActivity";
     private static final String KEY_INDEX = "index";
+    //Die colours
     private static final DieColourEnum PRIMARY_COLOUR = DieColourEnum.WHITE;
     private static final DieColourEnum SECONDARY_COLOUR = DieColourEnum.GREY;
+    //Extra's for communication between activities (process communication via the OS's Activity Manager)
+    private static final int THIRTY_SHOW_RESULTS = 100;
 
-    //private DieController test_die;
-    private AllDieImages mAllDieImages;
     private HashMap<Integer, Integer> mAllDiceImageButtons;
     private ThirtyGame mGame;
     private GameMessages mGameMessages;
@@ -40,51 +41,17 @@ public class ThirtyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");//Logcat
 
+
+        setContentView(R.layout.activity_thirty);
+        initialise();
+
         if (savedInstanceState != null) {
             Log.i(TAG, "Testing saved bundle");
             test = savedInstanceState.getInt(KEY_INDEX, 0);
+        } else {
+            //TODO recover app with data from the saved state bundle
         }
 
-        setContentView(R.layout.activity_thirty);
-
-        //TODO add more data
-        initialise();
-        /**
-         * START HERE TO SET UP THE DICE WITH PRIMARY AND SECONDARY COLOURS!!!!
-         */
-
-        //test_die = new DieController();
-
-        //Log.i(TAG, "testing dice " + test_die.toString());
-
-        //ImageButton testButton = (ImageButton) findViewById(R.id.die_Button_1);
-        //testButton.setImageResource(R.drawable.red4);
-
-        //int t = mAllDieImages.getDieImage(DieColourEnum.RED, 2);
-        //System.out.println("get value " + t);
-        //Dice x = new Dice();
-        //System.out.println("number of dice = " + x.numberOfDice());
-        //x.getDie(5).roll();
-        //System.out.println("id = " + x.getDie(5).getDieId() + "  dice = " + x.getDie(5));
-        //testButton.setImageResource(mAllDieImages.getDieImage(DieColourEnum.GREY, 4));
-        //testButton.setImageResource(t);
-        //testButton.setImageResource(mAllDieImages.getDieImage(DieColourEnum.GREY, 3));
-
-        /*for (Integer element : mAllDiceImageButtons.keySet()) {
-            ImageButton ib = (ImageButton) findViewById(mAllDiceImageButtons.get(element.intValue()));
-            ib.setImageResource(mAllDieImages.getDieImage(DieColourEnum.RED, x.getDie(element.intValue()).getDieValue()));
-        }*/
-
-
-        /*mGameDice.selectDie(4);
-        SetImageButtonsDice.setDiceImageButtonsImage(this,
-                PRIMARY_COLOUR, SECONDARY_COLOUR,
-                mAllDiceImageButtons, mGameDice);
-*/
-
-        /*SetImageButtonsDice.setDiceImageButtonsImage(this,
-                SECONDARY_COLOUR, PRIMARY_COLOUR,
-                mAllDiceImageButtons, mGameDice);*/
     }
 
     /**
@@ -92,10 +59,9 @@ public class ThirtyActivity extends AppCompatActivity {
      */
     private void initialise() {
         mGame = new ThirtyGame();
-        mAllDieImages = new AllDieImages();
         mGameMessages = new GameMessages();
+        mAllDiceImageButtons = new HashMap<>();
 
-        mAllDiceImageButtons = new HashMap<Integer, Integer>();
         SetImageButtonsDice.dieImageButtonsId(mAllDiceImageButtons);
 
         selectDieButtonAction();
@@ -105,18 +71,83 @@ public class ThirtyActivity extends AppCompatActivity {
     }
 
     private void refreshUI() {
-        SetImageButtonsDice.setDiceImageButtonsImage(this,
-                PRIMARY_COLOUR,
-                SECONDARY_COLOUR,
-                mAllDiceImageButtons,
-                mGame.getDiceCopy());
+        if (!mGame.isGameOver()) {
+            setDiceColour();
+        } else {
+            theGameEnded();
+        }
+    }
 
-        if (!mGame.isGameOver()){
-            mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
-        }else{
-            mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
-            Log.i(TAG, "Game is over");
-            //TODO START A NEW ACTIVITY TO SHOW THE FINAL SCORE BOARD
+    /**
+     * Display information that the game has ended.
+     */
+    private void theGameEnded() {
+        Log.i(TAG, "Game is over");
+        Log.i(TAG, mGame.toString());
+
+        //create an intent and start the activity
+        //tell the Activity manager that ThirtyGame activity wants to call the scoreboard activity
+        Intent intent = ScoreboardActivity.newIntent(ThirtyActivity.this,
+                mGame.getThirtyScoreBoardCopy());
+        //send a copy of the scoreboard to the scoreboard activity using an extra and listen for a reply
+        startActivityForResult(intent, THIRTY_SHOW_RESULTS);
+
+
+    }
+
+    /**
+     * Get the specific data from the scoreboard activity.
+     *
+     * @param requestCode a code used to inform this activity what the called activity did as an int.
+     * @param resultCode  the code sent by the child activity on how it finished.
+     * @param data Intent data used to communicate with this activity.
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //the back button was pressed thus as default start a new game
+        if (resultCode == RESULT_CANCELED) {
+            initialise();
+        } else if (requestCode == THIRTY_SHOW_RESULTS) {//a button was pushed
+            if ((data != null) && ScoreboardActivity.scoreboardChoice(data)) {//the new game button was pushed
+                initialise();
+            } else {//the end game button was pushed
+                endGame();
+            }
+        }
+        Log.i(TAG, "On Activity Result called");
+    }
+
+    /**
+     * End the game.
+     */
+    private void endGame() {
+        mGame = null;
+        mGameMessages = null;
+        finish();
+    }
+
+    /**
+     * Set the colour of the die based on how many time the dice has been thrown.
+     */
+    private void setDiceColour() {
+        if (mGame.getRollCount() != 1) {
+            SetImageButtonsDice.setDiceImageButtonsImage(this,
+                    PRIMARY_COLOUR,
+                    SECONDARY_COLOUR,
+                    mAllDiceImageButtons,
+                    mGame.getDiceCopy());
+        } else {
+            SetImageButtonsDice.setDiceImageButtonsImage(this,
+                    DieColourEnum.RED,
+                    SECONDARY_COLOUR,
+                    mAllDiceImageButtons,
+                    mGame.getDiceCopy());
+            //display relevant text
+            if (mGame.getRollCount() > 1) {
+                mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.ROLL_DICE);
+            } else {
+                mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.NEW_GAME);
+            }
         }
     }
 
@@ -139,6 +170,21 @@ public class ThirtyActivity extends AppCompatActivity {
     }
 
     /**
+     * Display information about the current round in the game.
+     */
+    private void continueGame() {
+
+        if (mGame.getRollCount() == 1) {
+            mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.ROLL_DICE);
+        } else if (mGame.getRollCount() > ThirtyGame.MAX_ROLLS) {
+            Toast.makeText(this, "That was the last roll.", Toast.LENGTH_SHORT).show();
+            mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.MAX_ROLLS_REACHED_CALCULATE_RESULT);
+        } else {
+            mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.ROLL_SELECT_DICE);
+        }
+    }
+
+    /**
      * Add a onClick event listener to the games set of dice. This is where we wire up a UI button
      * to the object that contains all the die. Thus when the roll dice button is clicked the
      * value of each die is updated.
@@ -149,12 +195,10 @@ public class ThirtyActivity extends AppCompatActivity {
             if (mGame.canRollDice()) {
                 mGame.rollDice();
                 refreshUI();
-                if (!mGame.canRollDice()) {
-                    Toast.makeText(this, "That was the last roll.", Toast.LENGTH_SHORT).show();
-                    mGameMessages.displayMessage(this, GameMessageKeyEnum.MAX_ROLLS_REACHED);
-                } else {
-                    mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
-                }
+                continueGame();
+            } else {
+                Toast.makeText(this, "Click on \"Calculate Dice\".", Toast.LENGTH_SHORT).show();
+                mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.MAX_ROLLS_REACHED);
             }
         });
     }
@@ -162,15 +206,21 @@ public class ThirtyActivity extends AppCompatActivity {
     private void calculateDiceResult() {
         Button bt = (Button) findViewById(R.id.calculate_dice);
         bt.setOnClickListener(v -> {
-            if (!mGame.isGameOver()) {
-                 mGame.updateScoreBoard();
-                refreshUI();
-                //mGameMessages.displayMessage(this, GameMessageKeyEnum.ROLL_DICE);
-            } else {
-                //mGameMessages.displayMessage(this, GameMessageKeyEnum.TESTING);
-                //TODO Game over show results
+
+            //user did not roll the dice first
+            if (mGame.getRollCount() == 1) {
+                Toast.makeText(this, "You choose not to roll the dice!!", Toast.LENGTH_LONG).show();
             }
 
+            mGame.updateScoreBoard();
+            refreshUI();
+            if (!mGame.isGameOver()) {
+                mGameMessages.displayMessage(this, "Round " +
+                        mGame.getLastRound().get(0) + " result." +
+                        "\nVal: " + mGame.getLastRound().get(1) +
+                        "\nScore: " + mGame.getLastRound().get(2) +
+                        "\n\n-> Roll dice! <-");
+            }
         });
     }
 

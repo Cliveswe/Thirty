@@ -7,6 +7,8 @@ import android.util.Log;
 import com.example.thirty.dice.Dice;
 import com.example.thirty.scoreCalculator.ScoreCalculator;
 
+import java.util.Vector;
+
 public class ThirtyGame implements Parcelable {
     private static final String TAG = "DiceClass";
 
@@ -14,11 +16,11 @@ public class ThirtyGame implements Parcelable {
     private final static int VAL = 3;
     private final static int LOW_BOUNDARY = 1;
     private final static int TOP_BOUNDARY = 3;
-    private final static int MAX_ROLLS = 3;
-    private final static int MAX_ROUNDS = 3;
+    public final static int MAX_ROLLS = 3;
+    public final static int MAX_ROUNDS = 1;
     private int mRoundNumber;
     private final Dice mDice;
-    private final ThirtyScoreBoard mThirtyScoreBoard;
+    private final ThirtyScoreboard mThirtyScoreBoard;
 
     public ThirtyGame() {
         this(new Dice());
@@ -27,7 +29,7 @@ public class ThirtyGame implements Parcelable {
     public ThirtyGame(Dice dice) {
         this.mDice = dice;
         mRoundNumber = 1;
-        mThirtyScoreBoard = new ThirtyScoreBoard();
+        mThirtyScoreBoard = new ThirtyScoreboard();
     }
 
     /**
@@ -43,6 +45,9 @@ public class ThirtyGame implements Parcelable {
         return isGameOver();
     }
 
+    public Vector<Integer> getLastRound(){
+        return mThirtyScoreBoard.getScoreResultForRound(mThirtyScoreBoard.getNumOfScores());
+    }
 
     /**
      * Get the current round number.
@@ -90,6 +95,8 @@ public class ThirtyGame implements Parcelable {
         return false;
     }
 
+
+
     /**
      * How many times have the dice been thrown (rolled).
      *
@@ -131,6 +138,7 @@ public class ThirtyGame implements Parcelable {
         determineScoreForRound();
         startNewRound();
     }
+
     /**
      * To update the score board with the results of the current round this method must be triggered.
      */
@@ -174,6 +182,13 @@ public class ThirtyGame implements Parcelable {
         }
     }
 
+    /**
+     * Get a copy of the scoreboard.
+     * @return scoreboard as ThirtyScoreboard
+     */
+    public ThirtyScoreboard getThirtyScoreBoardCopy(){
+        return new ThirtyScoreboard(mThirtyScoreBoard);
+    }
     @Override
     public String toString() {
         return "ThirtyGame{" +
@@ -201,7 +216,7 @@ public class ThirtyGame implements Parcelable {
     protected ThirtyGame(Parcel in) {
         mRoundNumber = in.readInt();
         mDice = in.readParcelable(Dice.class.getClassLoader());
-        mThirtyScoreBoard = in.readParcelable(ThirtyScoreBoard.class.getClassLoader());
+        mThirtyScoreBoard = in.readParcelable(ThirtyScoreboard.class.getClassLoader());
     }
 
     @Override

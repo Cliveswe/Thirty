@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class Dice implements Iterator<DieController>, Parcelable {
     private int mRollCount;
-    private int mNumberOfDie;
+    private final int mNumberOfDie;
     private int mIndex;//index to the list of all die in the dice list
 
     //a collection of die as a list
-    private List<DieController> mDice;
+    private final List<DieController> mDice;
 
     /**
      * Create a default number of die.
@@ -32,13 +32,13 @@ public class Dice implements Iterator<DieController>, Parcelable {
     /**
      * parameters primary die colour, selected die colour
      *
-     * @param numberOfDie
+     * @param numberOfDie the number of die in the dice.
      */
     public Dice(int numberOfDie) {
         this.mNumberOfDie = numberOfDie;
         mRollCount = 1;
         mIndex = 0;
-        mDice = new ArrayList<DieController>();
+        mDice = new ArrayList<>();
         DieController dc;
 
         for (int index = 0; index < numberOfDie; index++) {
@@ -57,12 +57,13 @@ public class Dice implements Iterator<DieController>, Parcelable {
         this.mNumberOfDie = src.mNumberOfDie;
         this.mRollCount = src.mRollCount;
         this.mIndex = src.mIndex;
-        this.mDice = new ArrayList<DieController>();
+        this.mDice = new ArrayList<>();
 
         //copy the array
-        for (DieController element : src.mDice) {
+        /*for (DieController element : src.mDice) {
             mDice.add(element);
-        }
+        }*/
+        mDice.addAll(src.mDice);
     }
 
     /**
@@ -75,7 +76,7 @@ public class Dice implements Iterator<DieController>, Parcelable {
     public DieController getDie(int index) {
         int i = index - 1;
         if ((i >= 0) && (i < numberOfDice())) {
-            return (DieController) mDice.get(i);
+            return mDice.get(i);
         }
         return null;
     }
@@ -113,17 +114,6 @@ public class Dice implements Iterator<DieController>, Parcelable {
             }
         }
     }
-
-    /**
-     * The dice cannot be thrown if the maximum number of throws has been met.
-     * @return true if the maximum number of throws has been reached otherwise false.
-     */
-    /*public boolean canRollDice(){
-        if(rollCount <= MAX_ROLLS){
-            return true;
-        }
-        return false;
-    }*/
 
     /**
      * The number of current throws.

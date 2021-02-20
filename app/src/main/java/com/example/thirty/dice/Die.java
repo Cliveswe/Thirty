@@ -4,6 +4,7 @@ package com.example.thirty.dice;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 /**
  * This is the basic die design. A die has a value between 1 to 6. The die can be rolled to change
  * its value.
@@ -59,6 +60,10 @@ public class Die implements Parcelable {
         setDieValue((int) (Math.random() * (die_max - die_min + 1) + die_min));
     }
 
+    /**
+     * The die value as a string.
+     * @return die value as String.
+     */
     public String toString() {
         return "Die value = " + getDieValue();
     }

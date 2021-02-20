@@ -12,5 +12,9 @@
     <string name="game_information_textView">Game information</string>
     <string name="roll_dice">ROLL DICE</string>
     <string name="calculate_dice">CALCULATE DICE</string>
-
+    <string name="new_game">New Game</string>
+    <string name="end_game">End Game</string>
+    <string name="scoreboard_result_round">Round: </string>
+    <string name="scoreboard_result_pick">Pick: </string>
+    <string name="scoreboard_result_score">Score: </string>
 </resources>
