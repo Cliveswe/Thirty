@@ -17,7 +17,7 @@ public class ThirtyGame implements Parcelable {
     private final static int LOW_BOUNDARY = 1;
     private final static int TOP_BOUNDARY = 3;
     public final static int MAX_ROLLS = 3;
-    public final static int MAX_ROUNDS = 1;
+    public final static int MAX_ROUNDS = 10;
     private int mRoundNumber;
     private final Dice mDice;
     private final ThirtyScoreboard mThirtyScoreBoard;

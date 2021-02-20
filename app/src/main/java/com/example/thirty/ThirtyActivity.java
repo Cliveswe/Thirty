@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class ThirtyActivity extends AppCompatActivity {
     //Logcat tags
     private static final String TAG = "ThirtyActivity";
-    private static final String KEY_INDEX = "index";
+    private static final String KEY_GAME = "game";
     //Die colours
     private static final DieColourEnum PRIMARY_COLOUR = DieColourEnum.WHITE;
     private static final DieColourEnum SECONDARY_COLOUR = DieColourEnum.GREY;
@@ -34,7 +34,6 @@ public class ThirtyActivity extends AppCompatActivity {
     private ThirtyGame mGame;
     private GameMessages mGameMessages;
 
-    private int test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +42,14 @@ public class ThirtyActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_thirty);
-        initialise();
+        initialise();//app set up
 
         if (savedInstanceState != null) {
             Log.i(TAG, "Testing saved bundle");
-            test = savedInstanceState.getInt(KEY_INDEX, 0);
-        } else {
-            //TODO recover app with data from the saved state bundle
+            mGame = savedInstanceState.getParcelable(KEY_GAME);
         }
 
+        refreshUI();
     }
 
     /**
@@ -67,12 +65,12 @@ public class ThirtyActivity extends AppCompatActivity {
         selectDieButtonAction();
         rollDiceButtonAction();
         calculateDiceResult();
-        refreshUI();
     }
 
     private void refreshUI() {
         if (!mGame.isGameOver()) {
             setDiceColour();
+            continueGame();
         } else {
             theGameEnded();
         }
@@ -91,8 +89,6 @@ public class ThirtyActivity extends AppCompatActivity {
                 mGame.getThirtyScoreBoardCopy());
         //send a copy of the scoreboard to the scoreboard activity using an extra and listen for a reply
         startActivityForResult(intent, THIRTY_SHOW_RESULTS);
-
-
     }
 
     /**
@@ -107,9 +103,11 @@ public class ThirtyActivity extends AppCompatActivity {
         //the back button was pressed thus as default start a new game
         if (resultCode == RESULT_CANCELED) {
             initialise();
+            refreshUI();
         } else if (requestCode == THIRTY_SHOW_RESULTS) {//a button was pushed
             if ((data != null) && ScoreboardActivity.scoreboardChoice(data)) {//the new game button was pushed
                 initialise();
+                refreshUI();
             } else {//the end game button was pushed
                 endGame();
             }
@@ -124,6 +122,7 @@ public class ThirtyActivity extends AppCompatActivity {
         mGame = null;
         mGameMessages = null;
         finish();
+        System.exit(0);
     }
 
     /**
@@ -195,7 +194,7 @@ public class ThirtyActivity extends AppCompatActivity {
             if (mGame.canRollDice()) {
                 mGame.rollDice();
                 refreshUI();
-                continueGame();
+                //continueGame();
             } else {
                 Toast.makeText(this, "Click on \"Calculate Dice\".", Toast.LENGTH_SHORT).show();
                 mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.MAX_ROLLS_REACHED);
@@ -228,45 +227,46 @@ public class ThirtyActivity extends AppCompatActivity {
      * Override methods for each of the activities lifecycle states.
      */
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+
+        savedInstanceState.putParcelable(KEY_GAME, mGame);//save and instance of the game object
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        //TODO add additional state control for onStart
+        Log.i(TAG, "onStart() called");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //TODO add additional state control for onResume
+        refreshUI();
+        //continueGame();
+        Log.i(TAG, "onResume() called");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //TODO add additional state control onPause
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
-
-        //TODO 0 is a dummy value and needs to be swapped out
-        //TODO KEY_INDEX also need to be replaced
-        savedInstanceState.putInt(KEY_INDEX, test);
+        Log.i(TAG, "onPause() called");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //TODO add additional state control onStop
+        Log.i(TAG, "onStop() called");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //TODO add additional state control onDestroy
-
+        Log.i(TAG, "onDestroy() called");
+        //clean up
+        mGame = null;
+        mGameMessages = null;
     }
 
 }

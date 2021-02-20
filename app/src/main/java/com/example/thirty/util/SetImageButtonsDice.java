@@ -33,8 +33,8 @@ public class SetImageButtonsDice extends AppCompatActivity {
         AllDieImages allDieImageButtons = new AllDieImages();
 
         for (Integer element : mImageButtons.keySet()) {
-            ImageButton ib = (ImageButton) activity.findViewById(mImageButtons.get(element.intValue()));
-            if (!d.getDie(element.intValue()).isSelected()) {
+            ImageButton ib = activity.findViewById(mImageButtons.get(element));
+            if (!d.getDie(element).isSelected()) {
                 ib.setImageResource(
                         getDieImageButton(element, allDieImageButtons, primaryColour, d));
             } else {
@@ -58,7 +58,7 @@ public class SetImageButtonsDice extends AppCompatActivity {
 
         return allDieImageButtons.getDieImage(
                 colour,
-                d.getDie(element.intValue()).getDieValue()
+                d.getDie(element).getDieValue()
         );
     }
 

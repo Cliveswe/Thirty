@@ -19,10 +19,10 @@ public class GameMessages {
         TESTING,
         ROLL_SELECT_DICE,
         MAX_ROLLS_REACHED_CALCULATE_RESULT,
-        NEW_GAME;
-    };
+        NEW_GAME
+    }
 
-    private  HashMap<GameMessageKeyEnum, String> mMessageList;
+    private final HashMap<GameMessageKeyEnum, String> mMessageList;
 
     public GameMessages() {
         mMessageList = new HashMap<GameMessageKeyEnum, String>() {{
@@ -36,13 +36,13 @@ public class GameMessages {
     }
 
     public void displayMessage(Activity activity, GameMessageKeyEnum keyEnum) {
-        TextView tv = (TextView) activity.findViewById(R.id.game_status_text);
+        TextView tv = activity.findViewById(R.id.game_status_text);
         System.out.println("test text view: " + mMessageList.get(keyEnum));
         tv.setText(mMessageList.get(keyEnum));
     }
 
     public void displayMessage(Activity activity, String msg) {
-        TextView tv = (TextView) activity.findViewById(R.id.game_status_text);
+        TextView tv = activity.findViewById(R.id.game_status_text);
         System.out.println("test text view: " + msg);
         tv.setText(msg);
     }
