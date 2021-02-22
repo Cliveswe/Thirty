@@ -8,6 +8,8 @@ import com.example.thirty.R;
 import java.util.HashMap;
 
 /**
+ * This class is a container that contains the text instructions for the game.
+ * <p>
  * Author: Clive Leddy
  * Email: clive@cliveleddy.com
  * Date: 2021-02-05
@@ -35,12 +37,24 @@ public class GameMessages {
         }};
     }
 
+    /**
+     * Display a message.
+     *
+     * @param activity the activity that is calling this method.
+     * @param keyEnum  is a key that is use to choose a text to display as enum GameMessageKeyEnum.
+     */
     public void displayMessage(Activity activity, GameMessageKeyEnum keyEnum) {
         TextView tv = activity.findViewById(R.id.game_status_text);
         System.out.println("test text view: " + mMessageList.get(keyEnum));
         tv.setText(mMessageList.get(keyEnum));
     }
 
+    /**
+     * Display a message.
+     *
+     * @param activity the activity that is calling this method.
+     * @param msg      is a text to display as String.
+     */
     public void displayMessage(Activity activity, String msg) {
         TextView tv = activity.findViewById(R.id.game_status_text);
         System.out.println("test text view: " + msg);

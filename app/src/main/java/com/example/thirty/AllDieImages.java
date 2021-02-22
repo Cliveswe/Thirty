@@ -1,8 +1,3 @@
-/**
- * Author: Clive Leddy
- * Email: clive@cliveleddy.com
- * Date: 2021-02-03
- */
 package com.example.thirty;
 
 import com.example.thirty.dice.Die;
@@ -12,6 +7,10 @@ import java.util.HashMap;
 /**
  * This is where the R.drawable.id of a die drawable in the application is mapped according to its
  * colour (grey, red or white) and its value (1 to 6).
+ * <p>
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-03
  */
 public class AllDieImages {
     private DiceImages allImagesOfDice;
@@ -83,7 +82,7 @@ public class AllDieImages {
      * @return the drawable id for a die as an int, otherwise -1 on out of bounds.
      */
     public int getDieImage(DieColourEnum key, int num) {
-        if((num >= Die.die_min) && (num <= Die.die_max)){
+        if ((num >= Die.die_min) && (num <= Die.die_max)) {
             return allImagesOfDice.getImageList(key).get(num);
         }
         return -1;

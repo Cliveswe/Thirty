@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thirty.game.ThirtyGame;
@@ -16,6 +17,8 @@ import com.example.thirty.util.SetImageButtonsDice;
 import java.util.HashMap;
 
 /**
+ * This is the main activity of the game.
+ * <p>
  * Author: Clive Leddy
  * Email: clive@cliveleddy.com
  * Date: 2021-01-30
@@ -23,16 +26,21 @@ import java.util.HashMap;
 public class ThirtyActivity extends AppCompatActivity {
     //Logcat tags
     private static final String TAG = "ThirtyActivity";
-    private static final String KEY_GAME = "game";
+
     //Die colours
     private static final DieColourEnum PRIMARY_COLOUR = DieColourEnum.WHITE;
     private static final DieColourEnum SECONDARY_COLOUR = DieColourEnum.GREY;
+
+    //Bundle keys
+    private static final String KEY_GAME = "game";
+    private static final String KEY_GAME_INFO = "game info";
     //Extra's for communication between activities (process communication via the OS's Activity Manager)
     private static final int THIRTY_SHOW_RESULTS = 100;
 
     private HashMap<Integer, Integer> mAllDiceImageButtons;
     private ThirtyGame mGame;
     private GameMessages mGameMessages;
+    private Bundle mSavedInstanceState;
 
 
     @Override
@@ -40,6 +48,8 @@ public class ThirtyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");//Logcat
 
+        //copy the activity lifecycle state
+        mSavedInstanceState = savedInstanceState;
 
         setContentView(R.layout.activity_thirty);
         initialise();//app set up
@@ -48,7 +58,6 @@ public class ThirtyActivity extends AppCompatActivity {
             Log.i(TAG, "Testing saved bundle");
             mGame = savedInstanceState.getParcelable(KEY_GAME);
         }
-
         refreshUI();
     }
 
@@ -65,8 +74,12 @@ public class ThirtyActivity extends AppCompatActivity {
         selectDieButtonAction();
         rollDiceButtonAction();
         calculateDiceResult();
+        mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.NEW_GAME);
     }
 
+    /**
+     * Update the game user interface.
+     */
     private void refreshUI() {
         if (!mGame.isGameOver()) {
             setDiceColour();
@@ -96,7 +109,7 @@ public class ThirtyActivity extends AppCompatActivity {
      *
      * @param requestCode a code used to inform this activity what the called activity did as an int.
      * @param resultCode  the code sent by the child activity on how it finished.
-     * @param data Intent data used to communicate with this activity.
+     * @param data        Intent data used to communicate with this activity.
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,7 +187,14 @@ public class ThirtyActivity extends AppCompatActivity {
     private void continueGame() {
 
         if (mGame.getRollCount() == 1) {
-            mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.ROLL_DICE);
+            // mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.ROLL_DICE);
+            if (mSavedInstanceState != null) {
+                //update game info
+                TextView tv = findViewById(R.id.game_status_text);
+                tv.setText(mSavedInstanceState.getCharSequence(KEY_GAME_INFO));
+            } else {
+                mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.NEW_GAME);
+            }
         } else if (mGame.getRollCount() > ThirtyGame.MAX_ROLLS) {
             Toast.makeText(this, "That was the last roll.", Toast.LENGTH_SHORT).show();
             mGameMessages.displayMessage(this, GameMessages.GameMessageKeyEnum.MAX_ROLLS_REACHED_CALCULATE_RESULT);
@@ -232,6 +252,8 @@ public class ThirtyActivity extends AppCompatActivity {
         Log.i(TAG, "onSaveInstanceState");
 
         savedInstanceState.putParcelable(KEY_GAME, mGame);//save and instance of the game object
+        TextView tv = findViewById(R.id.game_status_text);
+        savedInstanceState.putCharSequence(KEY_GAME_INFO, tv.getText());
     }
 
     @Override

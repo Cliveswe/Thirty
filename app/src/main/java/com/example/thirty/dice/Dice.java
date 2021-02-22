@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * This is the main die controller as it will manage more than one die. The plural of die is
  * dice.
+ * <p>
  * Author: Clive Leddy
  * Email: clive@cliveleddy.com
  * Date: 2021-02-03
@@ -175,12 +176,13 @@ public class Dice implements Iterator<DieController>, Parcelable {
 
     /**
      * Is there another selected die.
+     *
      * @return true if there is another selected die otherwise false.
      */
     @Override
     public boolean hasNext() {
-        for(int step = mIndex; step < mDice.size(); step++){
-            if(mDice.get(step).isSelected()){
+        for (int step = mIndex; step < mDice.size(); step++) {
+            if (mDice.get(step).isSelected()) {
                 mIndex = step;
                 return true;
             }
@@ -190,17 +192,17 @@ public class Dice implements Iterator<DieController>, Parcelable {
 
     /**
      * Get the next selected die.
+     *
      * @return the next selected die as a DietController.
      */
     @Override
     public DieController next() {
         return mDice.get(mIndex++);
-
     }
 
     /*
-    * Parcelable
-    **/
+     * Parcelable
+     **/
     protected Dice(Parcel in) {
         mRollCount = in.readInt();
         mNumberOfDie = in.readInt();

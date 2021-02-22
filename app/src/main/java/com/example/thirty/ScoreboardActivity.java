@@ -22,6 +22,13 @@ import com.example.thirty.game.ThirtyScoreboard;
 
 import java.util.ArrayList;
 
+/**
+ * The scoreboard activity. It uses a custom adapter to display a list of score results.
+ * <p>
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-18
+ */
 public class ScoreboardActivity extends AppCompatActivity {
     private static final String TAG = "ScoreboardActivity";
     //Extra's for communication between activities (process communication via the OS's Activity Manager)

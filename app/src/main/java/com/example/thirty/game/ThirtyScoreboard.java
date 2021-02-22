@@ -7,6 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * This is the scoreboard controller. All the results per round are saved to an array of the class
+ * ThirtyScorePerRound.
+ * <p>
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-06
+ */
 public class ThirtyScoreboard implements Parcelable {
 
     private final List<ThirtyScorePerRound> mScoreboard;

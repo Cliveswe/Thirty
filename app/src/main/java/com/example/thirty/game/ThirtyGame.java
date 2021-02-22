@@ -9,6 +9,13 @@ import com.example.thirty.scoreCalculator.ScoreCalculator;
 
 import java.util.Vector;
 
+/**
+ * This is the game controller. It controls both the dice and the scoreboard.
+ * <p>
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-06
+ */
 public class ThirtyGame implements Parcelable {
     private static final String TAG = "DiceClass";
 
@@ -45,7 +52,7 @@ public class ThirtyGame implements Parcelable {
         return isGameOver();
     }
 
-    public Vector<Integer> getLastRound(){
+    public Vector<Integer> getLastRound() {
         return mThirtyScoreBoard.getScoreResultForRound(mThirtyScoreBoard.getNumOfScores());
     }
 
@@ -95,8 +102,6 @@ public class ThirtyGame implements Parcelable {
         return false;
     }
 
-
-
     /**
      * How many times have the dice been thrown (rolled).
      *
@@ -134,7 +139,7 @@ public class ThirtyGame implements Parcelable {
     /**
      * Update the score board with the current dice.
      */
-    public void updateScoreBoard(){
+    public void updateScoreBoard() {
         determineScoreForRound();
         startNewRound();
     }
@@ -184,11 +189,13 @@ public class ThirtyGame implements Parcelable {
 
     /**
      * Get a copy of the scoreboard.
+     *
      * @return scoreboard as ThirtyScoreboard
      */
-    public ThirtyScoreboard getThirtyScoreBoardCopy(){
+    public ThirtyScoreboard getThirtyScoreBoardCopy() {
         return new ThirtyScoreboard(mThirtyScoreBoard);
     }
+
     @Override
     public String toString() {
         return "ThirtyGame{" +

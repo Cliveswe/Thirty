@@ -24,6 +24,7 @@ public class DieController extends Die implements Parcelable {
 
     /**
      * Copy constructor.
+     *
      * @param dieController source to copy from as type DieController.
      */
     public DieController(DieController dieController) {

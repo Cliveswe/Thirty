@@ -8,6 +8,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * This static class is used to calculate the maximum score per round. Although not perfect, this
+ * class attempts to find the best score from the selected dice per round.
+ * <p>
+ * Author: Clive Leddy
+ * Email: clive@cliveleddy.com
+ * Date: 2021-02-12
+ */
 public class ScoreCalculator {
     //a restriction in the game anything less than 3 will be calculated as LOW
     //VAL is picker in English
@@ -54,11 +62,6 @@ public class ScoreCalculator {
         Vector<Integer> vector = new Vector<>(sortingList.size());
         FindDoublets(sortingList, vector);
 
-        // int x = LargestSum(sortingList);
-        //System.out.println("Largest sum x = " + x);
-        //System.out.println("Sorting list: " + sortingList + "\n***");
-
-        //
         if (sortingList.size() == vector.size()) {
             RemoveLeastVector(vector, sortingList);
         }
@@ -223,7 +226,6 @@ public class ScoreCalculator {
 
         return res;
     }
-
 
     /**
      * Find the groups of die values that are doublets. When found add their index to the vector.
